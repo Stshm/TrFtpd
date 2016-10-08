@@ -1,5 +1,5 @@
 # TrFtpd
-Ftp server application
+Ftp server application on NODE.JS
 
 First, create public/private key, using OpenSSL command-line. 
 On easy way, type below.
