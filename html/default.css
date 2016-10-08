@@ -1,0 +1,99 @@
+
+
+ul {
+	list-style-type:none;
+	list-style-image:url('/icons/Places-folder-remote-icon.png');
+	font-size: 12pt;
+}
+
+ul.open {
+	list-style-type:none;
+	list-style-image:url('/icons/Actions-document-open-folder-icon.png');	
+	font-size: 12pt;
+}
+
+li.acl {
+	list-style-type:none;
+	list-style-image:url('/icons/group16.png');	
+	font-size: 10pt;
+}
+h2 {
+    font-size: 2.0em;
+    font-weight: bold;
+	color: white;
+	background-color: lightslategray;
+}
+h3 {
+    font-size: 1.6em;
+    font-weight: bold;
+	color: white;
+	background-color: steelblue;
+}
+h4 {
+    font-size: 1.4em;
+    font-weight: bold;
+	color: white;
+	background-color: steelblue;
+}
+body {
+    font-size: 12pt;
+    font-family: "Meiryo UI", "Osaka", 'sans-serif';
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 8px;
+
+    background-color: #ffffff;
+    border-right: 2px solid #999999;
+    border-left: 1px solid #999999;
+ 
+}
+
+input {
+    font-family: "Meiryo UI", "Osaka", 'sans-serif';
+
+}
+
+table {
+	font-size: 12pt;
+    font-family: "Meiryo UI", "Osaka", 'sans-serif';
+	padding: 8px;
+	
+
+}
+
+tr.header {
+
+	color: white;
+	background-color: lightslategray;
+}
+td.header {
+	padding: 3px 5px;	
+}
+tr {
+	background-color: #EFEFEF;
+}
+
+td {
+	padding: 0px 0px 0px 0px;	
+}
+
+button {
+
+    font-size: 12pt;
+
+    padding: 3px 5px;
+    background-color: steelblue;
+    color: #fff;
+    border-style: none;
+}
+
+button:hover {
+
+    background-color: #24d;
+    color: #fff;
+
+}
+

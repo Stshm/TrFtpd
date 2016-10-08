@@ -1,0 +1,30 @@
+<html><head>
+<link rel='stylesheet' href='/default.css'> 
+<meta http-equiv=Content-Type content='text/html; charset=utf8'>
+<script src='/aclUi.js'></script>
+<script>
+var pairs = decodeUrlForm(location.search.substring(1));
+loadAcl(pairs['directory']);
+
+function openInputLine() {
+	openInputAcl(pairs['directory']);
+}
+</script>
+<title id='aTitle'></title></head>
+
+<body>
+<h4 id='aH4'></h4>
+<p align='right'>
+<button type=button onClick='window.close()'>close this window</button>
+</p>
+<table id='aTbl'><tr class='header'>
+<td class='header'>Type</td>
+<td class='header'>User/Group</td>
+<td class='header'>read</td>
+<td class='header'>write</td>
+<td  class='header'colspan=2>Action</td>
+</table>
+<button id='ifAcl' type='button' onclick='openInputLine();'>New acl</button>
+
+
+</body></html>

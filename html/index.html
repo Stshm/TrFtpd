@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" href="/default.css">
+<script src='/aclUi.js'></script>
+<script>
+/* update infomations */
+loadUsers();
+loadGroups();
+</script>
+<title>FTP Web Admin</title>
+
+</head>
+<body>
+<h2>FTP Web Admin </h2>
+Web interface for TrFtp server configuration.<p>
+<h3>Users</h3>
+<table id="uTbl"><tr class='header'>
+	<td class='header'> User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	<td class='header'> Password &nbsp;</td>
+	<td class='header'> UID &nbsp;&nbsp;</td>
+	<td class='header'> GID &nbsp;&nbsp;</td>
+	<td class='header'> Description</td>
+	<td class='header'> Home Drirectory</td>
+	<td class='header'> Permissions</td>
+	<td class='header' colspan=2> Action</td>
+</tr></table>
+<button id='ifUser' type='button' onclick='openInputUser();'>New user</button>
+&nbsp;<p>
+<h3>Groups</h3>
+<table id="gTbl"><tr class='header'>
+	<td class='header'> Group &nbsp;&nbsp;&nbsp;&nbsp;</td>
+	<td class='header'> GPasswd &nbsp;&nbsp;</td>
+	<td class='header'> GID &nbsp;&nbsp;</td>
+	<td class='header'> Users &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	<td class='header'> Permissions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	<td class='header' colspan=2>Action</td>
+</tr></table>
+<button id='ifGroup' type='button' onclick='openInputGroup();'>New group</button>
+
+&nbsp;<p>
+<h3>Server Directories</h3>
+
+<ul class='close' id="root">
+	<li onclick="expandTree('root');">root directory</li>
+	<li class='acl' onclick='openAclWindow(".");'>Access control list</li>
+</ul>
+
+<pre id=debug>
+</pre>
+
+</body>
+</html>
