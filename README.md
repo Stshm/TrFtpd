@@ -18,4 +18,6 @@ $:~/TrFtpd$node ftpwebadm.js
 
 Run web browser, and access to https://localhost:9433 
 
+Built in admin user/password is [admin/admin]
+Built in guest user/password is [guest/guest]
 
