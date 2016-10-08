@@ -1,5 +1,5 @@
 #!/bin/sh
-openssl genrsa -out etc/tls-key.pem 1024
+openssl genrsa -out etc/tls-key.pem 2048
 
 openssl req -new -key etc/tls-key.pem -out etc/tls-csr.pem
 
