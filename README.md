@@ -4,7 +4,7 @@ Ftp server application
 First, create public/private key, using OpenSSL command-line. 
 On easy way, type below.
 
-$:~/TrFtpd$./mktlskey.sh
+$:~/TrFtpd$sh mktlskey.sh
 
 Default key files placement is [TrFtpRoot]/etc/
 
