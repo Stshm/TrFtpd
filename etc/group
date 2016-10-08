@@ -1,0 +1,3 @@
+admin:x:0::allow|
+users:x:100::allow|
+guest:x:65534::allow|mkd,rmd,stor,dele
