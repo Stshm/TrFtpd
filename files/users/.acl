@@ -1,0 +1,6 @@
+# Access contorol list
+#
+owner  admin        rw 
+group  g:admin      rw 
+other * 
+* g:users r
