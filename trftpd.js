@@ -59,11 +59,7 @@ if(config['DirPathFiles'].match(/^\//))
 	acl.dirPathFiles = config['DirPathFiles'];
 else
 	acl.dirPathFiles = path.join(pathProg,config['DirPathFiles']);
-/* ftp user directory path */
-if(config['DirPathUsers'].match(/^\//))
-	acl.dirPathUsers = config['DirPathUsers'];
-else
-	acl.dirPathUsers = path.join(pathProg,config['DirPathUsers']);
+
 /* stored hashed password algol */
 acl.hashAlgo = config['HashAlgo']
 /* path of log file */
