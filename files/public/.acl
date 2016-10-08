@@ -1,0 +1,5 @@
+# 
+owner  admin        rw 
+group  g:admin      rw 
+other  *            r  
+*      g:users 		r 
