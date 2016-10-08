@@ -36,9 +36,10 @@ var tlsKey       = undefined;
 var tlsCert		 = undefined;
 /* reply for SYST */
 var sysType      = os.type();
+/* internal system parameters */
+var emitDelayTime = 100;
 
-
-var config = conf.readConfig(path.join('etc','trftpd.conf'));
+var config = conf.readConfig(pathConf);
 
 /* program path */
 var pathProg = process.cwd();
@@ -648,12 +649,12 @@ class FtpCommandInterpreter extends  emitter{
 				if(conn){ /* if passive mode */
 					conn.receivePasv(writer, function(replyCode, branch){
 						session.reply(replyCode, branch);
-					}, storFile);
+					}, storFile, session.user);
 				}else{
 					session.createDataConnection(false).receive(writer, 
 						function(replyCode, branch){ 
 						session.reply(replyCode, branch);
-					}, storFile);
+					}, storFile, session.user);
 				}
 			});
 		});
@@ -1039,7 +1040,7 @@ class FtpDataConnection extends  emitter {
 	}
 
 	/* Active mode data receive */
-	receive(writer, cbReply, filename){
+	receive(writer, cbReply, filename, user){
 		var self = this;
 
     	var sockClr = net.connect(this.remotePort, this.remoteAddr ,
@@ -1069,7 +1070,7 @@ class FtpDataConnection extends  emitter {
 
             	sock.on('end', function(e){
                 	cbReply(250);
-					self.emit('stored',filename, writer.bytesWritten);
+					self.emit('stored',user, filename, writer.bytesWritten);
                 	return;
             	});
 		}
@@ -1134,14 +1135,14 @@ class FtpDataConnection extends  emitter {
 
 	}
 	/* Passive mode data receive */
-	receivePasv(writer, cbReply, filename){
+	receivePasv(writer, cbReply, filename, user){
 
  		var self  = this;
 
 		/* Client has not yet connected */
 		if(!this.pasvClient){
 			this.on('connect', function(){
-				self.receivePasv(writer, cbReply);
+				self.receivePasv(writer, cbReply,filename, user);
 			});
 			debugLog('Client has not yet connected, wait to connect');
 			return;
@@ -1170,7 +1171,10 @@ class FtpDataConnection extends  emitter {
 		
         this.pasvClient.on('end', function(){
             cbReply(250);
-			self.emit('stored',filename, writer.bytesWritten);
+			/* XXX require delay time to emit correct count of written bytes */
+			setTimeout(function(){
+				self.emit('stored',user, filename, writer.bytesWritten);
+			}, emitDelayTime);			
             /* close server */
 			self.closeServer();
             return;
@@ -1404,8 +1408,8 @@ class FtpSession extends emitter {
 			this.pasvConnection.createServer();
 		}
 		/* event triggered */
-		conn.on('stored',function(fname,bytes){
-			self.emit('stored', fname, bytes);
+		conn.on('stored',function(user,fname,bytes){
+			self.emit('stored', user, fname, bytes);
 		});
 		return conn;
 	}
@@ -1447,8 +1451,9 @@ function connectionListener(socket){
 	debugLog('connect from client.');
 	var session = new FtpSession(socket, optGlobal);
 
-	session.on('stored',function(fname, bytes){
-		debugLog(fname + ' has been stored. File size: ' + bytes + 'bytes');
+	session.on('stored',function(user, fname, bytes){
+		debugLog('By ' + user + ', '+ fname +
+					 ' has been stored. File size: ' + bytes + 'bytes');
 		/* code to do when file uploaded */
 	});
 
