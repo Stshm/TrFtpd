@@ -8,7 +8,7 @@ $:~/TrFtpd$sh mktlskey.sh
 
 Default key files placement is [TrFtpRoot]/etc/
 
-Run ftp server(default contorol port is 8012)
+Run ftp server(default contorol port is 8021)
 
 $:~/TrFtpd$node trftpd.js
 
