@@ -7,6 +7,9 @@ var path = require('path');
 var querystring = require('querystring')
 
 var acl = require('./acl.js');
+var conf = require('./conf.js');
+
+var config = conf.readConfig(path.join('etc','trftpd.conf'));
 
 var debug = true;
 var listenPort  = 9443;
@@ -22,6 +25,55 @@ acl.debug = true;
 
 var tlsKey       = path.join(process.cwd(), 'etc/tls-key.pem');
 var tlsCert      = path.join(process.cwd(), 'etc/tls-cert.pem');
+
+/* program path */
+var pathProg = process.cwd();
+/* control port */
+listenPort 	 = config['WebAdminPort'];
+/* passwd file for this service */
+if(config['PathPasswd'].match(/^\//))
+	acl.pathPasswd = config['PathPasswd'];
+else
+	acl.pathPasswd = path.join(pathProg, config['PathPasswd']);
+/* group file */
+if(config['PathGroup'].match(/^\//))
+	acl.pathGroup = config['PathGroup'];
+else
+	acl.pathGroup = path.join(pathProg,config['PathGroup']);
+/* ftp root path */
+if(config['DirPathFiles'].match(/^\//))
+	acl.dirPathFiles = config['DirPathFiles'];
+else
+	acl.dirPathFiles = path.join(pathProg,config['DirPathFiles']);
+/* ftp user directory path */
+if(config['DirPathUsers'].match(/^\//))
+	acl.dirPathUsers = config['DirPathUsers'];
+else
+	acl.dirPathUsers = path.join(pathProg,config['DirPathUsers']);
+/* stored hashed password algol */
+acl.hashAlgo = config['HashAlgo']
+
+/* tls key file */
+if(config['WebAdminFileTlsKey'].match(/^\//))
+	tlsKey = config['FileTlsKey'];
+else
+	tlsKey = path.join(pathProg, config['FileTlsKey']);
+/* tls cert file */
+if(config['WebAdminFileTlsCert'].match(/^\//))
+	tlsCert = config['FileTlsCert'];
+else
+	tlsCert = path.join(pathProg, config['FileTlsCert']);
+
+if(config['Debug'] === 'true'){
+	debug = true;
+	acl.debug = true;
+}else{
+	debug = false;
+	acl.debug = true;
+}
+
+/* end of configuration */
+
 var opts = { key:  fs.readFileSync(tlsKey),  
 	 	     cert: fs.readFileSync(tlsCert) 
 };

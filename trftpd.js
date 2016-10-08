@@ -89,6 +89,10 @@ else
 if(config['SystemType'])
 	sysType = config['SystemType'];
 
+if(config['Debug'] === 'true')
+	debug = true;
+else
+	debug = false;
 
 /* debug log */
 debugLog('Server parameters');
@@ -191,7 +195,10 @@ const S_IFMT  = parseInt("0170000",8); /* file type mask*/
 const S_IFREG = parseInt("0100000",8); /* file */
 const S_IFDIR = parseInt("0040000",8); /* directory */
 
-function debugLog(msg){ if(debug) console.log('Debug: ' + msg); }
+function debugLog(msg){ 
+	if(debug) 
+		console.log('Debug: ' + msg);
+}
 
 /* %t = time 
  * %a = ip address
