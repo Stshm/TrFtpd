@@ -1,7 +1,7 @@
-## TrFtpd
+# TrFtpd
 Ftp server application on NODE.JS
 
-# Install  
+### Install  
 Decompress archive , keeping directory strucuture, and move the program directory.
 
 First, create public/private key, using OpenSSL command-line. On easy way, type below.
