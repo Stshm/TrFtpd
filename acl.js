@@ -135,7 +135,7 @@ exports.addUser　= function (rc, cbfunc){
 
 		var writer=fs.createWriteStream(self.pathPasswd, {   flags: 'a',
 				  						     		    encoding: null,
-				  				  	     	        	mode: 0600 });
+				  				  	     	        	mode: '0600' });
 		writer.on('error',function(e){
 			debugLog('Error: Cannot write passwd file. ' + e.message);
 			cbfunc(false);
@@ -380,7 +380,7 @@ exports.addGroup　= function (rc, cbfunc){
 					 rc['permissions'].trim();
 		var writer=fs.createWriteStream(self.pathGroup, {   flags: 'a',
 				  						     		    encoding: null,
-				  				  	     	        	mode: 0600 });
+				  				  	     	        	mode: '0600' });
 		writer.on('error',function(e){
 			debugLog('Error: Cannot write group file. ' + e.message);
 			cbfunc(false);
@@ -762,7 +762,7 @@ exports.checkAcl = function (directory, user , cbfunc){
 				self.getGroups(0,0,function(grpInf){
 					var i = 0;
 					for( i in grpInf ){					
-						gUsers = grpInf[i]['users'].split(',');
+						var gUsers = grpInf[i]['users'].split(',');
 						var j = 0;
 						for(j in gUsers){
 							if(user === gUsers[j]) {

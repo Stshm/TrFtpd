@@ -265,7 +265,9 @@ function getDirectoryListSync(dir, fAcl){
 	
 	var i = 0;
 	var lines = {};
-	var oLen = gLen = sLen = 0; 
+	var oLen = 0;
+	var gLen = 0;
+	var sLen = 0; 
 	for(i in files){
 		lines[i] = getDirectoryLineSync(dir, files[i], fAcl);
 		
@@ -273,7 +275,7 @@ function getDirectoryListSync(dir, fAcl){
 		if(gLen < lines[i][8]) gLen = lines[i][8];
 		if(sLen < lines[i][9]) sLen = lines[i][9];
 	}
-	j = 0;
+	var j = 0;
 	for(j in lines) {
 		var f = lines[j][6];
 		if ( f.match(/^\./) ) {
