@@ -132,12 +132,12 @@ exports.addUser　= function (rc, cbfunc){
 					 rc['realName'].trim() + ':' + 
 					 homedir + ':' + 
 					 rc['permissions'].trim();
-		//console.log('Debug: ' + pwline);
+
 		var writer=fs.createWriteStream(self.pathPasswd, {   flags: 'a',
 				  						     		    encoding: null,
 				  				  	     	        	mode: 0600 });
 		writer.on('error',function(e){
-			console.log('Error: Cannot write passwd file. ' + e.message);
+			debugLog('Error: Cannot write passwd file. ' + e.message);
 			cbfunc(false);
 			return;
 		});
@@ -201,7 +201,7 @@ exports.removeUser　= function (user, cbfunc){
 	rl.resume();
 
 	writer.on('error',function(e){
-		console.log('Error: Cannot write passwd file. ' + e.message);
+		debugLog('Error: Cannot write passwd file. ' + e.message);
 		cbfunc(ret);
 	});
 }
@@ -247,7 +247,7 @@ exports.editUser　= function (rc, cbfunc){
 	rl.resume();
 
 	writer.on('error',function(e){
-		console.log('Error: Cannot write passwd file. ' + e.message);
+		debugLog('Error: Cannot write passwd file. ' + e.message);
 		cbfunc(ret);
 	});
 }
@@ -382,7 +382,7 @@ exports.addGroup　= function (rc, cbfunc){
 				  						     		    encoding: null,
 				  				  	     	        	mode: 0600 });
 		writer.on('error',function(e){
-			console.log('Error: Cannot write group file. ' + e.message);
+			debugLog('Error: Cannot write group file. ' + e.message);
 			cbfunc(false);
 			return;
 		});
@@ -421,7 +421,7 @@ exports.removeGroup　= function (group, cbfunc){
 	rl.resume();
 
 	writer.on('error',function(e){
-		console.log('Error: Cannot write group file. ' + e.message);
+		debugLog('Error: Cannot write group file. ' + e.message);
 		cbfunc(ret);
 	});
 }
@@ -463,7 +463,7 @@ exports.editGroup　= function (rc, cbfunc){
 	rl.resume();
 
 	writer.on('error',function(e){
-		console.log('Error: Cannot write group file. ' + e.message);
+		debugLog('Error: Cannot write group file. ' + e.message);
 		cbfunc(ret);
 	});
 }
@@ -705,7 +705,7 @@ exports.updateAcl = function(directory, type, target, fp , cbfunc){
 
 	reader.on('error',function(e){
 		/* no such file or permission denied .. */
-		console.log('Error: Cannot read acl file. ' + e.message);
+		debugLog('Error: Cannot read acl file. ' + e.message);
 		cbfunc(false);
 		isErr = true;
 		return;
@@ -732,7 +732,7 @@ exports.updateAcl = function(directory, type, target, fp , cbfunc){
 
 	writer.on('error',function(e){
 		/* write error */
-		console.log('Error: Cannot write acl file. ' + e.message);
+		debugLog('Error: Cannot write acl file. ' + e.message);
 		if(!isErr){
 			cbfunc(false);
 			isErr = ture;

@@ -213,7 +213,7 @@ class Logger {
 
 		var self = this;
 		this.logWriter.on('error',function(e) {
-			console.log('Error: Cannot open log file -> ' + e.message);
+			debugLog('Error: Cannot open log file -> ' + e.message);
 		});
 		this.logWriter.on('open',function() {
 			emitter.on('log',function(level, proc, host, user){
