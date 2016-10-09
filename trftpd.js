@@ -140,7 +140,7 @@ const REPLY_CODES = {
 	202: 'Command not implemented, superfluous at this site.',
 	211: 'System status, or system help reply.',
 		21101: 'Extensions supported\r\n' + 
-			   ' AUTH TLS\r\n PBSZ\r\n PROT\r\n',
+			   ' AUTH TLS\r\n PBSZ\r\n PROT\r\n OPTS UTF8 ON\r\n',
 	212: 'Directory status.',
 	213: 'File status.',
 	214: 'Help message.',
@@ -423,6 +423,7 @@ class FtpCommandInterpreter extends  emitter{
 			'prot': this.onProt,
 			'ccc' : undefined, 
 			'feat': this.onFeat,
+			'opts': this.onOpts
 		};
 	}
 
@@ -823,7 +824,12 @@ class FtpCommandInterpreter extends  emitter{
 			session.reply(250, 0);
 		});
 	}
-	/* TYPE */
+	/* TYPE 
+	 *
+	 * always in ascii mode for LIST,NLST.
+	 * always in binary mode for RETR,STOR.
+	 * so always reply 200.
+	**/
 	onType(session, param){
 		session.reply(200);
 	}
@@ -923,6 +929,20 @@ class FtpCommandInterpreter extends  emitter{
 	/* FEAT */
 	onFeat(session) {
 		session.reply(211, 1);
+	}
+	/* OPTS */
+	onOpts(session, param){
+		/* always in utf8 mode */
+		var q = param.split(' ');
+		if(q[0] && q[0].match(/utf8/i)){
+			if(q[1] && q[1].match(/on/i)){
+				session.reply(200);
+				return;
+			}
+			session.reply(501);
+			return;
+		}
+		session.reply(504);
 	}
 	/* utilities */
 	checkLogin(session){

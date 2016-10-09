@@ -12,7 +12,7 @@ var dirPathUsers = '';
 var dirPathFiles = '';
 var hashAlgo = 'sha256';
 var encoding = 'utf8';
-var debug = '1';
+var debug = false;
 /* end of parameters */
 
 var self = this;
