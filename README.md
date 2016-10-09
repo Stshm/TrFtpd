@@ -1,23 +1,29 @@
-# TrFtpd
+## TrFtpd
 Ftp server application on NODE.JS
 
-First, create public/private key, using OpenSSL command-line. 
-On easy way, type below.
+# Install  
+Decompress archive , keeping directory strucuture, and move the program directory.
 
-$:~/TrFtpd$sh mktlskey.sh
+First, create public/private key, using OpenSSL command-line. On easy way, type below.
+
+$sh mktlskey.sh
 
 Default key files placement is [TrFtpRoot]/etc/
 
-Run ftp server(default contorol port is 8021)
+To run ftp server(default contorol port is 8021)
 
-$:~/TrFtpd$node trftpd.js
+$node trftpd.js
 
-Run Web admin interface
+To run Web admin interface
 
-$:~/TrFtpd$node ftpwebadm.js
+$node ftpwebadm.js
 
-Run web browser, and access to https://localhost:9433 
+Run web browser, and access to https://localhost:9433
 
-Built in admin user/password is [admin/admin]
-Built in guest user/password is [guest/guest]
+Built in admin user/password is [admin/admin] Built in guest user/password is [guest/guest]
+
+Note:
+In default configuration, path is specified relatively.
+
+
 
