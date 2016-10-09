@@ -559,7 +559,7 @@ class FtpCommandInterpreter extends  emitter{
 		var self = session.commands;
 		if(!self.checkLogin(session)) return;
 
-		if(param == 1 || param == 2){
+		if(!param || param == 1 || param == 2){
 			session.enterPasv(function(conn){
 				conn.listenServer();
 				var bind = conn.pasvServer.address();
