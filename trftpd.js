@@ -82,10 +82,10 @@ if(config['FileTlsCert'].match(/^\//))
 	tlsCert = config['FileTlsCert'];
 else
 	tlsCert = path.join(pathProg, config['FileTlsCert']);
-
+/* string for syst */
 if(config['SystemType'])
 	sysType = config['SystemType'];
-
+/* for debug */
 if(config['Debug'] === 'true')
 	debug = true;
 else
@@ -975,10 +975,13 @@ class FtpCommandInterpreter extends  emitter{
 		return r;
 	}
 	chrootPath(targetPath, rootPath){
-		var r = targetPath;
-		var re = new RegExp('^' + rootPath);
+		var r =  targetPath;
+		/* for windows '\' -> '\\' */
+		var re = new RegExp('^' + rootPath.replace(/\\/g,'\\\\'));
+		debugLog(re);
 		r = r.replace(re,'');
 		if(r === '') r = '/';
+		r = r.replace(/\\/g,'/'); /* for windows '\' -> '/' */
 		debugLog('chroot path: ' + targetPath + ' -> ' + r);
 		return r;
 	}
