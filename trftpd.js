@@ -370,27 +370,24 @@ class TextReader extends Readable {
 	constructor(data, opt){
 		super(opt);
     	this._data   = data;
-    	this._length = data.length;
     	this._pos    = 0;
 		this._encoding = 'utf8';
+		this._length = data.length;
+		debugLog('dataLen=' + this._length)
 	}
 	
 	setEncoding(enc){
 		this._encoding = enc;
 	}
-	open() {
-		this.emit('open');
-		debugLog('TextReader emitted open');
-	}
 
-	_read(n) {
-       	if(this._pos < this._length){
-        	var buf = new Buffer(this._data, this._encoding);
-		this._pos = this._length;
-        	this.push(buf);
-    	}else{
-        	this.push(null);
-    	}
+	_read() {
+		if(this._pos < this._length){
+			var chunk = Buffer.from(this._data, this._encoding);
+			this.push(chunk);
+			this._pos = this._length;
+		}else{
+			this.push(null);
+		}
 	}
 }
 /* end of class */
@@ -713,6 +710,7 @@ class FtpCommandInterpreter extends  emitter{
 						_transmit(getDirectoryListSync(directory, rcAcl));
 						return;
 					}catch(e){
+						debugLog("Got error: " + e.message );
 						session.reply('550');
 						if(conn) /* if passive mode */
 							session.pasvConnection.closeServer();
@@ -725,22 +723,19 @@ class FtpCommandInterpreter extends  emitter{
 		function _transmit(list){
 			if(!list) list = '\r\n';
 			var reader = new TextReader(list);
-			reader.on('open',function(){
 
-				if(conn) { /* if passive mode */
-					conn.transmitPasv(reader,
-										 function(replyCode, branch){
-						session.reply(replyCode, branch);
-					});
-				}else{
-					session.reply(150);	
-					session.createDataConnection(false).transmit(reader,
+			if(conn) { /* if passive mode */
+				conn.transmitPasv(reader,function(replyCode, branch){
+					session.reply(replyCode, branch);
+				});
+			}else{
+				session.reply(150);	
+				session.createDataConnection(false).transmit(reader,
 											function(replyCode, branch){
-						session.reply(replyCode, branch);
-					});
-				}
-			});
-			reader.open();
+					session.reply(replyCode, branch);
+				});
+			}
+
 		}
 
 	}
@@ -1111,7 +1106,7 @@ class FtpDataConnection extends  emitter {
      *   Server will be closed when the session has been ended
      **/
 	/* Passive mode data transmit */
-	transmitPasv(reader, cbReply){
+	transmitPasv(reader, cbReply, flag){
 
 		var self = this;
 		
@@ -1124,7 +1119,8 @@ class FtpDataConnection extends  emitter {
 		}
 		
         cbReply(125);
-        reader.pipe(this.pasvClient);
+
+		reader.pipe(this.pasvClient, { end: false });
 
         this.pasvClient.on('error',function(e){
             debugLog('error@transmitPasv->pasvClient.on-> ' + e.message);
@@ -1144,10 +1140,15 @@ class FtpDataConnection extends  emitter {
         });
 
         reader.on('end', function(){
-            cbReply(250);
-            /* close server */
-            self.pasvClient.end();
-			self.closeServer();
+	    	debugLog('reader end');	
+			/* delay for tls*/
+			setTimeout(function(){
+		        /* close server */
+				self.pasvClient.end();
+				self.closeServer();
+
+				cbReply(250);
+			},100);
             return;
         });
 		/* error with me ! */
@@ -1195,6 +1196,7 @@ class FtpDataConnection extends  emitter {
         });
 		
         this.pasvClient.on('end', function(){
+	    debugLog('pasvClient end');
             cbReply(250);
 			/* XXX require delay time to emit correct count of written bytes */
 			setTimeout(function(){
@@ -1217,23 +1219,25 @@ class FtpDataConnection extends  emitter {
 	createServer(){
 		var self = this;
 		var port = this.serverPort;
-
-		this.pasvServer = net.createServer(function(client){
-			/* TODO: check remote address */
-			self.isTls ? self.pasvClient = new tls.TLSSocket(client, optTls) :
-													self.pasvClient = client;
+		if(self.isTls) {
+			this.pasvServer = net.createServer(function(client){
+				onConnect(new tls.TLSSocket(client, optTls));
+			});
+		}else{
+			this.pasvServer = net.createServer(function(client){
+				onConnect(client);
+			});
+		}
+		function onConnect(client){		
+ 			self.pasvClient = client;
 			debugLog('Connect from ' + self.pasvClient.remoteAddress + 
-						' on data port.');
-
-			/* notify connection event */
+														' on data port.');
 			self.emit('connect');
-	
 			self.pasvClient.on('end',function(){
 				debugLog('Close connection of data port for ' + 
-										self.pasvClient.remoteAddress ); 			
-			});
-		});
-		
+										self.pasvClient.remoteAddress );
+			}); 			
+		}
 	}
 	/* listen server */
 	listenServer(){
@@ -1255,6 +1259,7 @@ class FtpDataConnection extends  emitter {
         return Math.floor(Math.random()*(this.rangePort['max'] - 
 							this.rangePort['min']) + 1) + this.rangePort['min'];
 	}
+
 }
 
 class FtpSession extends emitter {
@@ -1395,6 +1400,10 @@ class FtpSession extends emitter {
 		this.emit('log', 3, code + " " + 
 						replyStr.replace(/\r\n/g,'[CRCF]'),
 							this.activeAddress, this.user);
+		if(this.isPasv && this.pasvConnection) {
+			debugLog('emit replied');
+			this.pasvConnection.emit('replied', code);
+		}
 		return;
 
 	}
