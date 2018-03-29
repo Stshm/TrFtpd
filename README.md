@@ -6,7 +6,7 @@ Decompress archive , keeping directory strucuture, and move the program director
 
 First, create public/private key, using OpenSSL command-line. On easy way, type below.
 
-$sh mktlskey.sh
+$sh ./mktlskey.sh
 
 Default key files placement is [TrFtpRoot]/etc/
 
